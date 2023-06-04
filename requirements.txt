@@ -6,5 +6,6 @@ pandas
 mpi4py
 deepspeed
 datasets
+wandb
 # Utils
 dataclasses; python_version<"3.7"
