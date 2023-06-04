@@ -42,17 +42,11 @@ class WosDataModule(object):
         return DataLoader(
             self.prepare_dataset(file_path, ontology_path),
             batch_size=batch_size,
-            num_workers=8,
+            num_workers=0,
             drop_last=True,
-            pin_memory=False,
-            shuffle=False,
+            pin_memory=True,
+            shuffle=True,
             collate_fn=self.collate_fn,
-            sampler=DistributedSampler(
-                self.prepare_dataset(file_path, ontology_path),
-                shuffle=True,
-                drop_last=True,
-                seed=seed,
-            ),
         )
         
     ## test dataloader 
@@ -66,9 +60,9 @@ class WosDataModule(object):
         return DataLoader(
             self.prepare_test_dataset(file_path, ontology_path),
             batch_size=batch_size,
-            num_workers=8,
+            num_workers=0,
             drop_last=True,
-            pin_memory=False,
+            pin_memory=True,
             shuffle=True,
             collate_fn=self.collate_fn,
         )
