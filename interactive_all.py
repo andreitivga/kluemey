@@ -6,9 +6,9 @@ CUDA_VISIBLE_DEVICES=1 python interactive_all.py
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-# ckpt_name = "model_save/skt-kogpt2-base-v2_split-99-final/pytorch_model.bin"
-# model_name = "skt/kogpt2-base-v2"
-model_name = "momo/KLUE-TOD"    ## huggingface uploade
+ckpt_name = "model_save/gpt2_split-24-final/pytorch_model.bin"
+model_name = "gpt2"
+# model_name = "momo/KLUE-TOD"    ## huggingface uploade
 
 ## load tokenizer
 
@@ -23,7 +23,7 @@ tokenizer.add_tokens(SPECIAL_TOKENS)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 model.resize_token_embeddings(len(tokenizer)) 
 
-# model.load_state_dict(torch.load(ckpt_name, map_location="cpu"))
+model.load_state_dict(torch.load(ckpt_name, map_location="cpu"))
 model.cuda()
 
 '''
@@ -46,6 +46,8 @@ with torch.no_grad():
         )
         input_ids = tokens.input_ids.cuda()
 
+        print(input_ids)
+
         sample_output = model.generate(
             input_ids, 
             max_length=768, 
@@ -53,6 +55,8 @@ with torch.no_grad():
             early_stopping=True,
             no_repeat_ngram_size=4,
         )
+
+        print(sample_output)
         
         gen_dst = sample_output[0]
         gen_dst_text = []

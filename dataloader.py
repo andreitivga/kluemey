@@ -14,6 +14,7 @@ class WosDataModule(object):
     def prepare_dataset(self, file_path: str, ontology_path: str):
         # load train/eval dataset
         dataset = self.processor.get_dataset(file_path, ontology_path)
+        print('datset:::', dataset)
         return dataset
 
     def prepare_test_dataset(self, file_path: str, ontology_path: str):

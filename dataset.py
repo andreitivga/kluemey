@@ -45,31 +45,31 @@ class WosProcessor(object):       ### data preprocessing
     def __init__(self, args, tokenizer):
         self.args = args
         self.tokenizer = tokenizer
-        self.slot_meta = []
+        # self.slot_meta = []
 
     def get_dataset(self, file_path: str, ontology_path: str) -> Dataset:    # get train/eval data
-        # Read ontology file and store the slots -> inform과 succese 구현하기 위해 사용
-        _, self.slot_meta = self.build_slot_from_ontology(ontology_path) 
+        # # Read ontology file and store the slots -> inform과 succese 구현하기 위해 사용
+        # _, self.slot_meta = self.build_slot_from_ontology(ontology_path) 
 
-        # Extract slots from a given dialogue and merge with ontology slots  -> inform과 succese 구현하기 위해 사용
-        with open(file_path, "r", encoding="utf-8") as dial_file:
-            dials = json.load(dial_file)
-        slot_from_dials = self.build_slot_meta(dials)
-        self.slot_meta = self.merge_slot_meta(slot_from_dials)
+        # # Extract slots from a given dialogue and merge with ontology slots  -> inform과 succese 구현하기 위해 사용
+        # with open(file_path, "r", encoding="utf-8") as dial_file:
+        #     dials = json.load(dial_file)
+        # slot_from_dials = self.build_slot_meta(dials)
+        # self.slot_meta = self.merge_slot_meta(slot_from_dials)
 
         examples = self._create_examples(file_path)
         features = self._convert_features(examples)
         return features
     
     def get_test_dataset(self, file_path: str, ontology_path: str) -> Dataset:  # get test data
-        # Read ontology file and store the slots  -> inform과 succese 구현하기 위해 사용
-        _, self.slot_meta = self.build_slot_from_ontology(ontology_path)
+        # # Read ontology file and store the slots  -> inform과 succese 구현하기 위해 사용
+        # _, self.slot_meta = self.build_slot_from_ontology(ontology_path)
 
-        # Extract slots from a given dialogue and merge with ontology slots   -> inform과 succese 구현하기 위해 사용
-        with open(file_path, "r", encoding="utf-8") as dial_file:
-            dials = json.load(dial_file)
-        slot_from_dials = self.build_slot_meta(dials)
-        self.slot_meta = self.merge_slot_meta(slot_from_dials)
+        # # Extract slots from a given dialogue and merge with ontology slots   -> inform과 succese 구현하기 위해 사용
+        # with open(file_path, "r", encoding="utf-8") as dial_file:
+        #     dials = json.load(dial_file)
+        # slot_from_dials = self.build_slot_meta(dials)
+        # self.slot_meta = self.merge_slot_meta(slot_from_dials)
 
         examples = self._create_examples(file_path)
         features = self._convert_test_data_features(examples)
@@ -154,57 +154,57 @@ class WosProcessor(object):       ### data preprocessing
             d_idx += 1
         return examples
 
-    def merge_slot_meta(self, slot_from_dial: List[str]) -> List[str]:
-        ## 생성한 발화 내의 doamin, slot의 중복값 제거
-        exist_slot_set = set(self.slot_meta)
-        for slot in slot_from_dial:
-            exist_slot_set.add(slot)
-        return sorted(list(exist_slot_set))
+    # def merge_slot_meta(self, slot_from_dial: List[str]) -> List[str]:
+    #     ## 생성한 발화 내의 doamin, slot의 중복값 제거
+    #     exist_slot_set = set(self.slot_meta)
+    #     for slot in slot_from_dial:
+    #         exist_slot_set.add(slot)
+    #     return sorted(list(exist_slot_set))
 
-    @staticmethod
-    def build_slot_from_ontology(ontology_path: str) -> Tuple[List[str], List[str]]:
-        ## inform, succese 계산하기 위해 ontology내의 doamin, slot 정렬 
-        domains = []
-        slots = []
-        with open(ontology_path, "r", encoding="utf-8") as ontology_file:
-            for line in json.load(ontology_file).keys():
-                domain_slot = line.split("-")
-                assert len(domain_slot) == 2
-                domains.append(domain_slot[0])
-                slots.append(line)
-        return domains, slots
+    # @staticmethod
+    # def build_slot_from_ontology(ontology_path: str) -> Tuple[List[str], List[str]]:
+    #     ## inform, succese 계산하기 위해 ontology내의 doamin, slot 정렬 
+    #     domains = []
+    #     slots = []
+    #     with open(ontology_path, "r", encoding="utf-8") as ontology_file:
+    #         for line in json.load(ontology_file).keys():
+    #             domain_slot = line.split("-")
+    #             assert len(domain_slot) == 2
+    #             domains.append(domain_slot[0])
+    #             slots.append(line)
+    #     return domains, slots
 
-    def build_slot_meta(self, data: List[Dict[str, List[Dict]]]) -> List[str]:
-        ## inform, succese 계산하기 위해 발화 내의 doamin, slot 정렬 
-        slot_meta = []
-        for dialog in data:
-            for turn in dialog["dialogue"]:
-                if not turn.get("state"):
-                    continue
-                for dom_slot_value in turn["state"]:
-                    domain_slot, _ = self.split_slot(
-                        dom_slot_value, get_domain_slot=True
-                    )
-                    if domain_slot not in slot_meta:
-                        slot_meta.append(domain_slot)
-        return sorted(slot_meta)
+    # def build_slot_meta(self, data: List[Dict[str, List[Dict]]]) -> List[str]:
+    #     ## inform, succese 계산하기 위해 발화 내의 doamin, slot 정렬 
+    #     slot_meta = []
+    #     for dialog in data:
+    #         for turn in dialog["dialogue"]:
+    #             if not turn.get("state"):
+    #                 continue
+    #             for dom_slot_value in turn["state"]:
+    #                 domain_slot, _ = self.split_slot(
+    #                     dom_slot_value, get_domain_slot=True
+    #                 )
+    #                 if domain_slot not in slot_meta:
+    #                     slot_meta.append(domain_slot)
+    #     return sorted(slot_meta)
 
-    @staticmethod
-    def split_slot(dom_slot_value, get_domain_slot=False):
-        ## inform, succese 계산하기 위해 발화 내의 doamin, slot, value 정렬. 
-        try:
-            dom, slot, value = dom_slot_value.split("-")
-        except ValueError:
-            tempo = dom_slot_value.split("-")
-            if len(tempo) < 2:
-                return dom_slot_value, dom_slot_value, dom_slot_value
+    # @staticmethod
+    # def split_slot(dom_slot_value, get_domain_slot=False):
+    #     ## inform, succese 계산하기 위해 발화 내의 doamin, slot, value 정렬. 
+    #     try:
+    #         dom, slot, value = dom_slot_value.split("-")
+    #     except ValueError:
+    #         tempo = dom_slot_value.split("-")
+    #         if len(tempo) < 2:
+    #             return dom_slot_value, dom_slot_value, dom_slot_value
 
-            dom, slot = tempo[0], tempo[1]
-            value = dom_slot_value.replace("%s-%s-" % (dom, slot), "").strip()
+    #         dom, slot = tempo[0], tempo[1]
+    #         value = dom_slot_value.replace("%s-%s-" % (dom, slot), "").strip()
 
-        if get_domain_slot:
-            return "%s-%s" % (dom, slot), value
-        return dom, slot, value
+    #     if get_domain_slot:
+    #         return "%s-%s" % (dom, slot), value
+    #     return dom, slot, value
 
     def _convert_features(
         ## train/eval data tokenizing
