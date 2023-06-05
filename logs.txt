@@ -1,0 +1,21 @@
+debugging klue tod with english data and gpt2
+
+ecamples::: 
+[WosInputExample(guid='wos-v1_train_07200-0', 
+dialogue_history=['<sos_context>', '', '<sos_u>I want to stay in an expensive accommodation in the east of Seoul. Can you find me a place with internet access and parking?<eos_u>', '<eos_context>'], 
+system_response='<sos_r>Hi. What type of accommodation do you prefer?<eos_r>', 
+dialogue_state=['accommodation-price-expensive', 'Accommodation-Region-Seoul East', 'accommodation-parking available-yes', 'Accommodation-Internet available-yes']), 
+
+WosInputExample(guid='wos-v1_train_07200-1', 
+dialogue_history=['<sos_context>', '', '<sos_u>I want to stay in an expensive accommodation in the east of Seoul. Can you find me a place with internet access and parking?<eos_u>', '<sos_r>Hi. What type of accommodation do you prefer?<eos_r>', '<sos_u>Any kind is fine.<eos_u>', '<eos_context>'], 
+system_response='<sos_r>Then, I recommend Signature Seoul, Gray Hotel, and Park Hotel. Among them, Park Hotel has the highest rating of 4.8.<eos_r>', 
+dialogue_state=['<sos_b>', 'accommodation-type-dontcare', '<eos_b>'])]
+
+features::: [WosInputFeature(guid='wos-v1_train_07200-0', 
+tokens_ids=[50257, 50269, 50261, 40, 765, 284, 2652, 287, 281, 5789, 19711, 287, 262, 7627, 286, 22372, 13, 1680, 345, 1064, 502, 257, 1295, 351, 5230, 1895, 290, 7647, 30, 50265, 50270, 330, 785, 4666, 341, 12, 20888, 12, 22031, 17320, 8641, 341, 12, 47371, 12, 4653, 2852, 3687, 330, 785, 4666, 341, 12, 20928, 278, 1695, 12, 8505, 17320, 8641, 341, 12, 28566, 1695, 12, 8505, 50262, 17250, 13, 1867, 2099, 286, 19711, 466, 345, 4702, 30, 50266, 50257],
+target_ids='</s><sos_r>Hi. What type of accommodation do you prefer?<eos_r></s>'),
+
+WosInputFeature(guid='wos-v1_train_07200-1', 
+tokens_ids=[50257, 50269, 50261, 40, 765, 284, 2652, 287, 281, 5789, 19711, 287, 262, 7627, 286, 22372, 13, 1680, 345, 1064, 502, 257, 1295, 351, 5230, 1895, 290, 7647, 30, 50265, 50262, 17250, 13, 1867, 2099, 286, 19711, 466, 345, 4702, 30, 50266, 50261, 7149, 1611, 318, 3734, 13, 50265, 50270, 50263, 330, 785, 4666, 341, 12, 4906, 12, 67, 756, 6651, 50267, 50262, 6423, 11, 314, 4313, 34894, 22372, 11, 12723, 12696, 11, 290, 3250, 12696, 13, 9754, 606, 11, 3250, 12696, 468, 262, 4511, 7955, 286, 604, 13, 23, 13, 50266, 50257], 
+target_ids='</s><sos_r>Then, I recommend Signature Seoul, Gray Hotel, and Park Hotel. Among them, Park Hotel has the highest rating of 4.8.<eos_r></s>')]
+
